@@ -1,6 +1,7 @@
 <?php namespace Cutlass;
 
 use Illuminate\Support\Str;
+use WP_Post;
 
 /**
  * This is the actual Queried Object called by WordPress
@@ -24,15 +25,13 @@ class Page extends Post
         /**
          * The object queried by WordPress
          *
-         * @var \WP_Post $queried_object
+         * @var WP_Post $queried_object
          */
-        $queried_object = get_queried_object();
+        $this->queried_object = get_queried_object();
 
-        var_dump($queried_object);die();
+        if( $this->queried_object instanceof WP_Post) {
 
-        if( !is_null($queried_object) ) {
-
-            parent::__construct($queried_object);
+            parent::__construct($this->queried_object);
 
         }
 
