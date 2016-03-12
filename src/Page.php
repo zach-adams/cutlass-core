@@ -3,7 +3,7 @@
 /**
  * This is the actual Queried Object called by WordPress
  */
-class Page
+class Page extends Post
 {
 
     /**
@@ -13,13 +13,6 @@ class Page
      */
     public $queried_object;
 
-    /**
-     * The ID of the object queried by WordPress
-     *
-     * @var int
-     */
-    public $queried_object_id;
-
 
     /**
      * Simply loads the queried object and ID
@@ -27,25 +20,8 @@ class Page
     public function __construct() {
 
         $queried_object = get_queried_object();
-        $this->queried_object_id = get_queried_object_id();
 
-        $this->set_properties($queried_object);
-
-    }
-
-    private function set_properties($queried_object) {
-
-        /**
-         * Get WP_Post properties
-         */
-        $props = get_object_vars($queried_object);
-
-        /**
-         * Apply WP_Post properties to this Post object
-         */
-        foreach ($props as $key => $prop) {
-            $this->$key = $prop;
-        }
+        parent::__construct($queried_object);
 
     }
 

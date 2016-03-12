@@ -161,7 +161,7 @@ class Post
      * Accepts a WP_Post object and builds a new
      * Post object using it's properties
      *
-     * @param $post \WP_Post|array
+     * @param $post \WP_Post|array|int
      *
      * @throws \Exception
      */
