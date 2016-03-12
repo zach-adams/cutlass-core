@@ -61,6 +61,11 @@ class Blade
         $this->blade      = $bladeEngine;
 
         /**
+         * Just initalize an empty array for our custom directives for now
+         */
+        $this->custom_directives = [];
+
+        /**
          * Our default Global View Data
          */
         $this->global_view_data = [
