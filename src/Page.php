@@ -28,6 +28,8 @@ class Page extends Post
          */
         $queried_object = get_queried_object();
 
+        var_dump($queried_object);die();
+
         parent::__construct($queried_object);
 
     }
