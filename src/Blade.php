@@ -31,6 +31,20 @@ class Blade
      */
     protected $context;
 
+    /**
+     * An array of our custom directives
+     *
+     * @var array
+     */
+    protected $custom_directives;
+
+    /**
+     * An array of our global view data
+     *
+     * @var array
+     */
+    protected $global_view_data;
+
 
     /**
      * Initialize the class
@@ -45,6 +59,25 @@ class Blade
         $this->filesnames = $filenames;
         $this->context    = $context;
         $this->blade      = $bladeEngine;
+
+        /**
+         * Our default Global View Data
+         */
+        $this->global_view_data = [
+            'wp_head' => $this->render_wp_head(),
+        ];
+
+        /**
+         * Filter: 'cutlass_custom_directives' - Add your own custom Blade directives
+         * @var string
+         */
+        $this->custom_directives = apply_filters('cutlass_custom_directives', $this->custom_directives);
+
+        /**
+         * Filter: 'cutlass_global_view_data' - Add global data to all Blade views
+         * @var string
+         */
+        $this->global_view_data = apply_filters('cutlass_global_view_data', $this->global_view_data);
 
     }
 
