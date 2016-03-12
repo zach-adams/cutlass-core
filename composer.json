@@ -1,0 +1,24 @@
+{
+  "name": "zach-adams/cutlass-core",
+  "description": "Cutlass is a Wordpress Starter Theme that incorporates the power of Laravel's Blade to make theme development even quicker and easier then before.",
+  "keywords": ["wordpress","theme","starter","blade","laravel"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Zach Adams",
+      "email": "zach@zach-adams.com",
+      "homepage": "http://zach-adams.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.9",
+    "philo/laravel-blade": "3.*",
+    "illuminate/filesystem": "5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Cutlass\\": "src"
+    },
+    "files": ["src/Util.php"]
+  }
+}
