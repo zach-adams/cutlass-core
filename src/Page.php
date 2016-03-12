@@ -1,5 +1,7 @@
 <?php namespace Cutlass;
 
+use Illuminate\Support\Str;
+
 /**
  * This is the actual Queried Object called by WordPress
  */
@@ -15,10 +17,15 @@ class Page extends Post
 
 
     /**
-     * Simply loads the queried object and ID
+     * Simply loads the queried object and sets up the construction
      */
     public function __construct() {
 
+        /**
+         * The object queried by WordPress
+         *
+         * @var \WP_Post $queried_object
+         */
         $queried_object = get_queried_object();
 
         parent::__construct($queried_object);
@@ -33,26 +40,44 @@ class Page extends Post
      * From Root's Sage
      * https://github.com/roots/sage
      *
-     * @return string
+     * @param int    $length
+     * @param string $ellipsis
+     * @param bool   $echo
+     *
+     * @return String|void
      */
-    public function title()
+    public function title($length = 0, $ellipsis = "...", $echo = true)
     {
+
+        $title = '';
 
         if (is_home()) {
             if (get_option('page_for_posts', true)) {
-                return get_the_title(get_option('page_for_posts', true));
+                $title = get_the_title(get_option('page_for_posts', true));
             } else {
-                return 'Latest Posts';
+                $title = 'Latest Posts';
             }
         } elseif (is_archive()) {
-            return get_the_archive_title();
+            $title = get_the_archive_title();
         } elseif (is_search()) {
-            return 'Search Results for ' . get_search_query();
+            $title = 'Search Results for ' . get_search_query();
         } elseif (is_404()) {
-            return '404 - Not Found';
+            $title = '404 - Not Found';
         } else {
-            return get_the_title($this->queried_object_id);
+            $title = ( property_exists($this, 'title') ? $this->title : $this->post_title );
         }
+
+        $title = apply_filters('the_title', $title);
+
+        if ( $length !== 0 && is_int($length) ) {
+            $title = Str::words($title, $length, $ellipsis);
+        }
+
+        if ($echo === false) {
+            return $title;
+        }
+
+        echo $title;
 
     }
 
