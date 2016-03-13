@@ -1,5 +1,7 @@
 <?php namespace Cutlass;
 
+use Illuminate\Filesystem\Filesystem;
+use InvalidArgumentException;
 use Philo\Blade\Blade as BladeEngine;
 use Exception;
 
@@ -45,6 +47,11 @@ class Blade
      */
     protected $global_view_data;
 
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+
 
     /**
      * Initialize the class
@@ -52,13 +59,15 @@ class Blade
      * @param $filenames array - An array or string of filename/s to render in order of precedence
      * @param $context   array - An array of data to add to the view
      * @param $bladeEngine   BladeEngine - The Blade renderer class
+     * @param $filesystem   Filesystem
      */
-    public function __construct($filenames, $context = [ ], $bladeEngine)
+    public function __construct($filenames, $context = [ ], $bladeEngine, $filesystem)
     {
 
         $this->filesnames = $filenames;
         $this->context    = $context;
         $this->blade      = $bladeEngine;
+        $this->filesystem = $filesystem;
 
         /**
          * Just initalize an empty array for our custom directives for now
@@ -126,27 +135,28 @@ class Blade
          * Check to see if it's a single filename, else check to see if
          * there's an array of filenames
          */
-        $output = false;
-        if (is_string($this->filesnames)) {
+
+        if(!is_string($this->filesnames) || !is_array($this->filesnames)) {
+            throw new InvalidArgumentException('$filesnames should be a string or array, ' . gettype($this->filesnames) . ' given.');
+        }
+
+        if(is_string($this->filesnames)) {
+
             if ( ! $this->blade->view()->exists($this->filesnames)) {
                 throw new Exception('View ( ' . $this->filesnames . ' ) does not exist');
             }
 
-            $output = $this->blade->view()->make($this->filesnames)->render();
-        } elseif (is_array($this->filesnames)) {
+            return $this->blade->view()->make($this->filesnames)->render();
 
-            foreach ($this->filesnames as $filename) {
-                if ($this->blade->view()->exists($filename)) {
-                    $output = $this->blade->view()->make($filename)->render();
-                    break;
-                }
+        }
+
+        foreach ($this->filesnames as $filename) {
+            if ($this->blade->view()->exists($filename)) {
+                return $this->blade->view()->make($filename)->render();
             }
         }
-        if ($output === false) {
-            throw new Exception('No valid View found');
-        }
 
-        return $output;
+        throw new Exception('No valid View found');
 
     }
 

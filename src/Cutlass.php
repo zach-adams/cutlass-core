@@ -88,7 +88,7 @@ class Cutlass
         /**
          * Our Blade Instance
          */
-        $blade = new Blade($filenames, $context, $bladeEngine);
+        $blade = new Blade($filenames, $context, $bladeEngine, $filesystem);
 
         try {
             $output = $blade->render();
