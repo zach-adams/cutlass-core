@@ -136,7 +136,7 @@ class Blade
          * there's an array of filenames
          */
 
-        if(!is_string($this->filesnames) || !is_array($this->filesnames)) {
+        if(!is_string($this->filesnames) && !is_array($this->filesnames)) {
             throw new InvalidArgumentException('$filesnames should be a string or array, ' . gettype($this->filesnames) . ' given.');
         }
 
