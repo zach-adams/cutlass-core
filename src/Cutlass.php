@@ -230,7 +230,7 @@ class Cutlass
     protected static function clear_blade_cache($cache_directory, $filesystem)
     {
 
-        return $filesystem->deleteDirectory($cache_directory);
+        return $filesystem->deleteDirectory($cache_directory, true);
 
     }
 }
