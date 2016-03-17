@@ -1,6 +1,7 @@
 <?php namespace Cutlass;
 
 use Exception;
+use FilesystemIterator;
 use InvalidArgumentException;
 use Philo\Blade\Blade as BladeEngine;
 use Illuminate\Filesystem\Filesystem;
@@ -225,12 +226,38 @@ class Cutlass
      * @param string $cache_directory
      * @param  Filesystem $filesystem
      *
-     * @return array
+     * @return bool
      */
     protected static function clear_blade_cache($cache_directory, $filesystem)
     {
+        if (! $filesystem->isDirectory($cache_directory)) {
+            return false;
+        }
 
-        return $filesystem->deleteDirectory($cache_directory, true);
+        $ignore_files = [
+            '.gitignore',
+        ];
+
+        $items = new FilesystemIterator($cache_directory);
+
+        foreach ($items as $item) {
+
+            if($item->isFile()) {
+                if(in_array($item->getFilename(), $ignore_files)) {
+                    continue;
+                }
+            }
+
+            if ($item->isDir() && ! $item->isLink()) {
+                $filesystem->deleteDirectory($item->getPathname());
+            }
+
+            else {
+                $filesystem->delete($item->getPathname());
+            }
+        }
+
+        return true;
 
     }
 }
