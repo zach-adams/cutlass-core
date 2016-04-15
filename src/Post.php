@@ -67,9 +67,10 @@ class Post
 
     /**
      * The post date
-     * @var string
+     * @var Carbon $date
+     * @var string $post_date
      */
-    public $date = '';
+    public $date;
 
     public $post_date = '';
 
@@ -244,8 +245,8 @@ class Post
         /**
          * Set human date property using Carbon
          */
-        $date             = ( property_exists($this, 'date') ? $this->date : $this->post_date );
-        $this->human_date = Carbon::parse($date)->diffForHumans();
+        $this->date       = ( !empty($this->date) ? Carbon::parse($this->date) : Carbon::parse($this->post_date) );
+        $this->human_date = $this->date->diffForHumans();
 
         /**
          * Set author property to actual author data
