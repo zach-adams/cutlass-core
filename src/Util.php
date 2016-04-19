@@ -1,5 +1,6 @@
 <?php
 use Cutlass\Cutlass;
+use Illuminate\Support\Debug\Dumper;
 use Illuminate\Support\Str;
 
 if ( ! function_exists('bcrypt')) {
@@ -346,6 +347,23 @@ if ( ! function_exists('storage_path')) {
 
         return get_template_directory() . '/storage/' . $path;
 
+    }
+}
+
+if (! function_exists('dd')) {
+    /**
+     * Dump the passed variables and end the script.
+     *
+     * @param  mixed
+     * @return void
+     */
+    function dd()
+    {
+        array_map(function ($x) {
+            (new Dumper)->dump($x);
+        }, func_get_args());
+
+        die(1);
     }
 }
 
